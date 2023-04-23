@@ -22,17 +22,20 @@ import random
 with open("wechat.yaml", "r") as file:
     file_data = file.read()
 config = yaml.safe_load(file_data)
+# headers = {
+#     "cookie": config['cookie'],
+#     "user-agent": config['user-agent'],
+# }
+
 headers = {
     "accept": "*/*",
-    "accept-encoding": "gzip, deflate, br",
     "accept-language": "zh-CN,zh;q=0.9",
-    "cookie": config['cookie'],
-    "referer": "https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit_v2&action=edit&isNew=1&type=10&token=1364882136&lang=zh_CN",
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-origin",
-    "user-agent": config['user-agent'],
     "x-requested-with": "XMLHttpRequest",
+    "user-agent": config['user-agent'],
+    "cookie": "appmsglist_action_3232843256=card; ua_id=WOBLP8jp3HexYZgvAAAAACfYO1hxtNJryk4RdPjevH4=; wxuin=81301713657027; mm_lang=zh_CN; pgv_pvid=2853491328; RK=NSWkFnn9dT; ptcz=b7e1727801ea73e978afc9076c3383bc3362442bf572faad47caac84c34ee6bd; rewardsn=; wxtokenkey=777; wwapp.vid=; wwapp.cst=; wwapp.deviceid=; sig=h010c2848ccef67ebaec85b7c712ac3d58f5529d4b3048923bc15227b08d46bc3548a45650eef9ffef3; _clck=0|1|fb0|0; uuid=2fdf1bfac39df91c4a3d87204865bb41; rand_info=CAESIJErN5pChAh0lIrICe9GK+7PDAdBsRm1ougjka6EkFbo; slave_bizuin=3232843256; data_bizuin=3247840771; bizuin=3232843256; data_ticket=SIvEHMfuDKIyFSUX6G8NDyGFyGNwUcT4zOXpbSAYnDX7O8fYoI9yYf8joBCGWkWJ; slave_sid=TXNOWWxBdVE5OFNrZl9Vcl93QXdHb2FBd0FTekZHaFFVQVZwR0xpSFRpUFh2dUhJMTJqeHpJaEpiaG13eTQ4Y3UzSXlWWXoyRG0xeGRpMHJzOW1QUFJZM0VEal9WcURiNTM5Tjc0ZTRndE01d2VqR3hVbFp4RWEycmdOMmFOcFRWcm9XZ00yYWR1RVZJbHYw; slave_user=gh_1d846312aa47; xid=189e10cf57c00867dc5a4abdeb37c329"
 }
 url = 'https://mp.weixin.qq.com/cgi-bin/appmsg'
 begin = 0
