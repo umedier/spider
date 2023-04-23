@@ -23,8 +23,16 @@ with open("wechat.yaml", "r") as file:
     file_data = file.read()
 config = yaml.safe_load(file_data)
 headers = {
+    "accept": "*/*",
+    "accept-encoding": "gzip, deflate, br",
+    "accept-language": "zh-CN,zh;q=0.9",
     "cookie": config['cookie'],
-    "user-agent": config['user-agent']
+    "referer": "https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit_v2&action=edit&isNew=1&type=10&token=1364882136&lang=zh_CN",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "user-agent": config['user-agent'],
+    "x-requested-with": "XMLHttpRequest",
 }
 url = 'https://mp.weixin.qq.com/cgi-bin/appmsg'
 begin = 0
@@ -93,3 +101,5 @@ while True:
 
 with open(wechat_spider_json_file, "w") as file:
     json.dump(wechat_app_msg_list, file, indent=2, ensure_ascii=False)
+
+# 46 / 69 / 90  16:51
