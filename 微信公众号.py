@@ -71,7 +71,7 @@ print("之前已抓取{}页文章,将从下一页开始抓取".format(i))
 
 while True:
     init = i * int(count)
-    params["begin"] = str(init)
+    params["begin"] = str(init+1)
 
     # print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
     resp = requests.get(url, params=params, headers=headers)
@@ -79,7 +79,9 @@ while True:
     # 抓取失败，退出
     if resp.json()['base_resp']['ret'] == 200013:
         print("触发微信机制，抓取失败，当前抓取第{0}页，每页{1}篇".format((i+1), count))
-        break
+        time.sleep(3600)
+        continue
+        # break
 
     # 抓取完成，结束
     if len(resp.json()['app_msg_list']) == 0:
