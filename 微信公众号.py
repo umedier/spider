@@ -105,4 +105,4 @@ while True:
 with open(wechat_spider_json_file, "w") as file:
     json.dump(wechat_app_msg_list, file, indent=2, ensure_ascii=False)
 
-# 46 / 69 / 90  16:51
+# 46 / 69 / 90  16:51 18:06
