@@ -19,6 +19,7 @@ import json
 import os
 import random
 import mysql
+from pymysql.converters import escape_string
 
 with open("wechat.yaml", "r") as file:
     file_data = file.read()
@@ -36,7 +37,8 @@ headers = {
 }
 url = 'https://mp.weixin.qq.com/cgi-bin/appmsg'
 # SELECT COUNT(DISTINCT(appmsgid)) FROM `wechat`
-begin = 880
+wechat_id = 2
+begin = 0
 count = 5
 params = {
     'action': 'list_ex',
@@ -69,24 +71,26 @@ with mysql.SQLManager() as db:
 
         # 信息打印
         for row in resp.json()['app_msg_list']:
-            count_sql = "SELECT * FROM wechat WHERE aid = '%s'" % (row['aid'])
+            count_sql = "SELECT * FROM wechat_article WHERE aid = '%s'" % (
+                row['aid'])
             try:
                 db.cursor.execute(count_sql)
                 results = db.cursor.fetchone()
                 if results is None:
-                    insert_sql = '''INSERT INTO `spiders`.`wechat` (aid, album_id, appmsg_album_infos, appmsgid, checking, copyright_type, cover, create_time, digest, has_red_packet_cover, is_pay_subscribe, item_show_type, itemidx, link, media_duration, mediaapi_publish_status, tagid, title, update_time) VALUES( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')''' % (
-                        row['aid'], row['album_id'], json.dumps(row['appmsg_album_infos']), row['appmsgid'], row['checking'], row['copyright_type'], row['cover'], row['create_time'], row['digest'], row['has_red_packet_cover'], row['is_pay_subscribe'], row['item_show_type'], row['itemidx'], row['link'], row['media_duration'], row['mediaapi_publish_status'], row['tagid'], row['title'], row['update_time'])
+                    insert_sql = '''INSERT INTO `spiders`.`wechat_article` (aid, album_id, appmsg_album_infos, appmsgid, checking, copyright_type, cover, create_time, digest, has_red_packet_cover, is_pay_subscribe, item_show_type, itemidx, link, media_duration, mediaapi_publish_status, tagid, title, update_time, wechat_id) VALUES( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')''' % (
+                        row['aid'], row['album_id'], json.dumps(row['appmsg_album_infos']), row['appmsgid'], row['checking'], row['copyright_type'], row['cover'], row['create_time'], escape_string(row['digest']), row['has_red_packet_cover'], row['is_pay_subscribe'], row['item_show_type'], row['itemidx'], row['link'], row['media_duration'], row['mediaapi_publish_status'], row['tagid'], escape_string(row['title']), row['update_time'], wechat_id)
                     db.cursor.execute(insert_sql)
                     db.conn.commit()
+                else:
+                    print(results)
             except Exception as e:
                 print(e)
-                break
+                print(row)
+                os._exit()
 
-        # 循环下一页
         params['begin'] += 5
         print(params['begin'])
-
-        # 随机等待几秒，避免被微信识别到
-        num = random.randint(120, 360)
-        print("---------------%s" % num)
+        num = random.randint(120, 300)
+        print("---------------%s --- %s" %
+              (num, len(resp.json()['app_msg_list'])))
         time.sleep(num)
